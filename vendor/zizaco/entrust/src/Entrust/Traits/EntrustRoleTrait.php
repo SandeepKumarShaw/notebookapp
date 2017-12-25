@@ -23,10 +23,15 @@ trait EntrustRoleTrait
         });
     }
     public function save(array $options = [])
-    {   //both inserts and updates
-        $result = parent::save($options);
-        Cache::tags(Config::get('entrust.permission_role_table'))->flush();
-        return $result;
+    {
+        //both inserts and updates
+        if (!parent::save($options)) {
+            return false;
+        }
+        if (Cache::getStore() instanceof TaggableStore) {
+            Cache::tags(Config::get('entrust.permission_role_table'))->flush();
+        }
+        return true;
     }
     public function delete(array $options = [])
     {   //soft or hard
@@ -154,6 +159,9 @@ trait EntrustRoleTrait
         }
 
         $this->perms()->attach($permission);
+        /*if (!$role->perms()->get()->contains('id', $permission->id)) {
+            $role->attachPermission($permission);
+        }*/
     }
 
     /**

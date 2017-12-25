@@ -6,7 +6,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
 
-class User extends Authenticatable
+class User extends Eloquent
 {
     use Notifiable;
     use EntrustUserTrait;
